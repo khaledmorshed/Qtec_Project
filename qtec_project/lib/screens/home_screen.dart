@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: "lays",
+                          hintText: "    lays",
                           hintStyle: TextStyle(
                             //fontFamily: 'Lexend Deca ',
                             //color: Color(0xFF95A1AC),

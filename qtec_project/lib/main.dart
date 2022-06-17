@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:qtech_project/provider/product_provider.dart';
 
 import 'screens/home_screen.dart';
+import 'screens/product_details_screen.dart';
 import 'widgets/product_item_widget.dart';
 
 void main() {
@@ -28,7 +29,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: HomeScreen(),
+      home: ProductDetailsScreen(),
     );
   }
 }
