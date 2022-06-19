@@ -25,11 +25,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
+      title: 'Qtec Project',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: ProductDetailsScreen(),
+      home: HomeScreen(),
+      // routes: {
+      //   ProductDetailsScreen.path: (context) => ProductDetailsScreen(),
+      // },
     );
   }
 }

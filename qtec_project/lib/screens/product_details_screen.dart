@@ -3,11 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_polygon/flutter_polygon.dart';
 import 'package:qtech_project/global/constant_variable.dart';
+import 'package:qtech_project/model/product_model.dart';
 
 import '../global/color_management.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
-  const ProductDetailsScreen({Key? key}) : super(key: key);
+  static final String path = "/ProductDetailsScreen";
+  Result? result;
+  //int? index;
+
+  ProductDetailsScreen(this.result);
 
   @override
   State<ProductDetailsScreen> createState() => _ProductDetailsScreenState();
@@ -15,22 +20,40 @@ class ProductDetailsScreen extends StatefulWidget {
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
   final searchController = TextEditingController();
-  final sliderItems = [
-    "slider/0.jpg",
-  ];
-
   @override
   Widget build(BuildContext context) {
     final heighM = MediaQuery.of(context).size.height;
     final widthM = MediaQuery.of(context).size.width;
-    print("height = $heighM + width = $widthM");
+    final replaceText = widget.result!.description!
+                        .replaceAll("$replace1", "")
+                        .replaceAll("$replace2", " ")
+                        .replaceAll("$replace3", " ")
+                        .replaceAll("$replace4", "")
+                        .replaceAll("$replace5", "")
+                        .replaceAll("$replace6", "")
+                        .replaceAll("$replace7", " ")
+                        .replaceAll("$replace8", " ")
+                        .replaceAll("$replace9", " ")
+                        .replaceAll("$replace10", " ")
+                        .replaceAll("$replace11", "")
+                        .replaceAll("$replace12", "")
+                        .replaceAll("$replace13", "")
+                        .replaceAll("$replace14", "")
+                        .replaceAll("$replace15", "")
+                        .replaceAll("$replace16", "")
+                        .replaceAll("$replace17", "")
+                        .replaceAll("$replace18", "")
+
+                                                    ;
     return Scaffold(
       backgroundColor: ColorManager.lightPink,
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             automaticallyImplyLeading: true,
-            leading: IconButton(onPressed: (){},icon: Icon(Icons.arrow_back, color: Colors.black,),),
+            leading: IconButton(onPressed: (){
+              Navigator.pop(context);
+            },icon: Icon(Icons.arrow_back, color: Colors.black,),),
             pinned: true,
             floating: true,
             expandedHeight: MediaQuery.of(context).size.height * 0.13,
@@ -90,7 +113,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               options: CarouselOptions(
                 height: MediaQuery.of(context).size.height * .28,
                 aspectRatio: 16 / 9,
-                viewportFraction: 0.5,
+                viewportFraction: 0.59,
                 initialPage: 0,
                 enableInfiniteScroll: true,
                 autoPlay: false,
@@ -100,10 +123,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
               items:[
                 ClipRRect(
                 borderRadius: BorderRadius.circular(15),
-                child: Image.asset(
-                  sliderItems[0],
-                  fit: BoxFit.fill,
-                  ),
+                child: Image.network("${widget.result!.image}"),
                 ),
               ],
             ),
@@ -114,25 +134,28 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           SliverToBoxAdapter(
-            child: bodySection(),
+            child: bodySection(replaceText),
           ),
         ],
       ),
     );
   }
 
-  bodySection() {
+  bodySection(replaceText) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text("প্রিঞ্জেলস অনিওন  ", style: TextStyle(fontSize: 24,),),
+          Text("${widget.result!.productName}", style: TextStyle(fontSize: 24,),maxLines: 2,),
           SizedBox(height: 15,),
           Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+           crossAxisAlignment: CrossAxisAlignment.start,
+           // mainAxisSize: MainAxisSize.min,
             children: [
-              Text("ব্রান্ডঃ প্রিঞ্জেলস", style: TextStyle(fontSize: 14,),),
-              SizedBox(width: 10,),
+              Text("ব্রান্ডঃ ${widget.result!.brand!.name}", style: TextStyle(fontSize: 14,),maxLines: 1,),
+              SizedBox(width: 5,),
               Container(
                 width: 10,
                 height: 10,
@@ -141,8 +164,8 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                   borderRadius: BorderRadius.circular(10)
                 ),
               ),
-              SizedBox(width: 10,),
-              Text("ডিস্ট্রিবিউটরঃ মোঃ মোবারাক হোসেন",style: TextStyle(fontSize: 14,),),
+              SizedBox(width: 5,),
+              Flexible(child: Text("ডিস্ট্রিবিউটরঃ ${widget.result!.seller}",style: TextStyle(fontSize: 14,),maxLines: 2,overflow: TextOverflow.ellipsis,)),
             ],
           ),
           SizedBox(height: 20,),
@@ -168,14 +191,14 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("ক্রয়মূল্যঃ",style: TextStyle(fontSize: 20,),),
-                              Text("৳ 220", style: TextStyle(fontSize: 20,),),
+                              Text("৳${widget.result!.charge!.currentCharge}", style: TextStyle(fontSize: 20,),),
                             ],
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("কিক্রয়মূল্যঃ",style: TextStyle(fontSize: 16,),),
-                              Text("৳ 250", style: TextStyle(fontSize: 16,),),
+                              Text("৳${widget.result!.charge!.sellingPrice}", style: TextStyle(fontSize: 16,),),
                             ],
                           ),
                           Divider(
@@ -186,7 +209,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Text("লাভঃ",style: TextStyle(fontSize: 16,),),
-                              Text("৳ 30", style: TextStyle(fontSize: 16,),),
+                              Text("৳${widget.result!.charge!.profit}", style: TextStyle(fontSize: 16,),),
                             ],
                           ),
                         ],
@@ -226,7 +249,7 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
             ),
           ),
           SizedBox(height: 10,),
-          Text("$details", style: TextStyle(fontSize: 16),),
+          Text("${replaceText}", style: TextStyle(fontSize: 16),textAlign: TextAlign.start,),
         ],
       ),
     );

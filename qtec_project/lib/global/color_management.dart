@@ -5,6 +5,7 @@ class ColorManager {
   static Color lightPink = HexColor.fromHex("#E5E5E5");
   static Color white1 = HexColor.fromHex("#FFFFFF");
   static Color polygonColor = HexColor.fromHex("#6210E1");
+  static Color stockTextColor = HexColor.fromHex("#C62828");
 
   static Color lightPink2 = Color.fromARGB(255, 255, 255, 1);
   static Color red2 = Color(0xfff06292);

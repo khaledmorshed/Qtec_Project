@@ -117,7 +117,7 @@ class Result {
   Brand? brand;
   String? image;
   Charge? charge;
-  List<Image>? images;
+  List<Images>? images;
   String? slug;
   String? productName;
   String? model;
@@ -142,7 +142,7 @@ class Result {
   DateTime? createdAt;
   DateTime? updatedAt;
   dynamic? language;
-  Seller? seller;
+  String? seller;
   dynamic? combo;
   CreatedBy? createdBy;
   dynamic? updatedBy;
@@ -155,7 +155,7 @@ class Result {
     brand: Brand.fromJson(json["brand"]),
     image: json["image"],
     charge: Charge.fromJson(json["charge"]),
-    images: List<Image>.from(json["images"].map((x) => Image.fromJson(x))),
+    images: List<Images>.from(json["images"].map((x) => Images.fromJson(x))),
     slug: json["slug"],
     productName: json["product_name"],
     model: json["model"],
@@ -180,7 +180,7 @@ class Result {
     createdAt: DateTime.parse(json["created_at"]),
     updatedAt: DateTime.parse(json["updated_at"]),
     language: json["language"],
-    seller: sellerValues.map[json["seller"]],
+    seller: json["seller"],
     combo: json["combo"],
     createdBy: createdByValues.map[json["created_by"]],
     updatedBy: json["updated_by"],
@@ -219,7 +219,7 @@ class Result {
     "created_at": createdAt!.toIso8601String(),
     "updated_at": updatedAt!.toIso8601String(),
     "language": language,
-    "seller": sellerValues.reverse[seller],
+    "seller": seller,
     "combo": combo,
     "created_by": createdByValues.reverse[createdBy],
     "updated_by": updatedBy,
@@ -237,37 +237,25 @@ class Brand {
     this.slug,
   });
 
-  Name? name;
+  String? name;
   String? image;
   dynamic? headerImage;
-  Slug? slug;
+  String? slug;
 
   factory Brand.fromJson(Map<String, dynamic> json) => Brand(
-    name: nameValues.map[json["name"]],
+    name: json["name"],
     image: json["image"],
     headerImage: json["header_image"],
-    slug: slugValues.map[json["slug"]],
+    slug: json["slug"],
   );
 
   Map<String, dynamic> toJson() => {
-    "name": nameValues.reverse[name],
+    "name": name,
     "image": image,
     "header_image": headerImage,
-    "slug": slugValues.reverse[slug],
+    "slug": slug,
   };
 }
-
-enum Name { RICE }
-
-final nameValues = EnumValues({
-  "Rice": Name.RICE
-});
-
-enum Slug { RICE }
-
-final slugValues = EnumValues({
-  "rice": Slug.RICE
-});
 
 class Charge {
   Charge({
@@ -349,8 +337,8 @@ final createdByValues = EnumValues({
   "qtecsl": CreatedBy.QTECSL
 });
 
-class Image {
-  Image({
+class Images {
+  Images({
     this.id,
     this.image,
     this.isPrimary,
@@ -362,7 +350,7 @@ class Image {
   bool? isPrimary;
   num? product;
 
-  factory Image.fromJson(Map<String, dynamic> json) => Image(
+  factory Images.fromJson(Map<String, dynamic> json) => Images(
     id: json["id"],
     image: json["image"],
     isPrimary: json["is_primary"],
@@ -377,11 +365,11 @@ class Image {
   };
 }
 
-enum Seller { SUPPLY_LINE }
+// enum Seller { SUPPLY_LINE }
 
-final sellerValues = EnumValues({
-  "SupplyLine": Seller.SUPPLY_LINE
-});
+// final sellerValues = EnumValues({
+//   "SupplyLine": Seller.SUPPLY_LINE
+// });
 
 enum Specification { EMPTY }
 

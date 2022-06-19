@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
+import 'package:qtech_project/db/db_helper.dart';
 import 'package:qtech_project/global/color_management.dart';
+import 'package:qtech_project/model/product_model.dart';
 import 'package:qtech_project/widgets/product_item_widget.dart';
 import '../provider/product_provider.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
@@ -17,21 +21,23 @@ class _HomeScreenState extends State<HomeScreen> {
   bool _isInit = true;
 
   @override
-  void didChangeDependencies() {
-    if (_isInit) {
+  void didChangeDependencies() async{
+    if (_isInit){
       _productProvider = Provider.of<ProductProvider>(context);
-      _productProvider.getCurrentWeatherData();
+       await _productProvider.getData();
       _isInit = false;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+
     final heighM = MediaQuery.of(context).size.height;
     final widthM = MediaQuery.of(context).size.width;
     return Scaffold(
       backgroundColor: ColorManager.lightPink,
-      body: CustomScrollView(
+      body:
+      CustomScrollView(
         slivers: [
           SliverAppBar(
             pinned: true,
@@ -73,7 +79,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: "    lays",
+                          hintText: "    rice",
                           hintStyle: TextStyle(
                             //fontFamily: 'Lexend Deca ',
                             //color: Color(0xFF95A1AC),
@@ -88,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
           ),
+
           const SliverToBoxAdapter(
             child: SizedBox(
               height: 20,
@@ -98,13 +105,20 @@ class _HomeScreenState extends State<HomeScreen> {
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 2,
               mainAxisSpacing: 10,
-              //crossAxisSpacing: 10,
+              crossAxisSpacing: 8,
                childAspectRatio: (3/4),
             ),
             delegate: SliverChildBuilderDelegate((context, index) {
-                return  ProductItemWidget();
+              if(_productProvider.productModel?.data! == null){
+               // print("100 = + ${_productProvider.productModel?.data!.products!.results![0].id}");
+                return Center(child: CircularProgressIndicator(),);
+              }
+              Result result = Result.fromJson(_productProvider.productModel?.data!.products!.results![index].toJson() as Map<String, dynamic>);
+              return  _productProvider.productModel!.data!.products!.results != null ?
+                ProductItemWidget(result, index) :
+                Center(child: CircularProgressIndicator(),);
               },
-              childCount: 100,
+              childCount: _productProvider.productModel?.data!.products!.results!.length,
             ),
           ),
       ],
