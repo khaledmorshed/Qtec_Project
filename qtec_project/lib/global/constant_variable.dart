@@ -2,6 +2,7 @@ const selling = 'বিক্রয়';
 const buying = 'ক্রয়';
 const profit = "লাভ";
 const takaSymbol = "৳ ";
+num? countLeng;
 const replace1 = '''                               <font color=\"#000000\" face=\"Noto Sans, sans-serif\" style=\"letter-spacing: 0.14px;\"><span style=\"font-size: 16px; letter-spacing: -0.3px;\">''';
 const replace2 = '''&nbsp;</span></font><span style=\"color: rgb(0, 0, 0); font-family: &quot;Noto Sans&quot;, sans-serif; font-size: 16px; letter-spacing: -0.3px;\">''';
 const replace3 = '''</span><font color=\"#000000\" face=\"Noto Sans, sans-serif\" style=\"letter-spacing: 0.14px;\"><span style=\"font-size: 16px; letter-spacing: -0.3px;\">&nbsp;''';

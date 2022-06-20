@@ -1,14 +1,10 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
-import 'package:qtech_project/db/db_helper.dart';
 import 'package:qtech_project/global/color_management.dart';
-import 'package:qtech_project/model/product_model.dart';
 import 'package:qtech_project/widgets/product_item_widget.dart';
+import '../global/constant_variable.dart';
 import '../provider/product_provider.dart';
-
+int customOffset = 0;
 class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -17,14 +13,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
 
   late ProductProvider _productProvider;
+  final _formKey = GlobalKey<FormState>();
   final searchController = TextEditingController();
+  //final RefreshController refreshController = RefreshController(initialRefresh: false);
   bool _isInit = true;
+  String holdSearchText = '';
 
   @override
   void didChangeDependencies() async{
     if (_isInit){
       _productProvider = Provider.of<ProductProvider>(context);
-       await _productProvider.getData();
+      _productProvider.result.clear();
+      customOffset = 0;
+       await _productProvider.getData('rice', 0);
       _isInit = false;
     }
   }
@@ -57,9 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
                     SizedBox(
                       height: 48,
                       width: 343.01,
-                      child: TextField(
+                      child: TextFormField(
+                        key: _formKey,
+                        onChanged: (value){
+                          if(value == ''){
+                            _productProvider.result.clear();
+                            customOffset = 0;
+                            _productProvider.getData('rice', 0);
+                          }
+                        },
                         controller: searchController,
-                        decoration: const InputDecoration(
+                        decoration:  InputDecoration(
                           //isCollapsed: true,
                           //isDense: true,
                           contentPadding:
@@ -73,13 +82,28 @@ class _HomeScreenState extends State<HomeScreen> {
                           suffixIcon:  Align(
                             widthFactor: 0.5,
                             //heightFactor: 5.0,
-                            child: Icon(
+                            child: IconButton(
+                              onPressed: ()async{
+                                _formKey.currentState?.save();
+                                if(searchController.text.trim() != ''){
+                                  _productProvider.result.clear();
+                                  customOffset = 0;
+                                  _productProvider.getData(searchController.text.trim(), 0);
+                                }
+                                if(searchController.text.trim() == ''){
+                                  _productProvider.result.clear();
+                                  customOffset = 0;
+                                  _productProvider.getData('rice', 0);
+                                }
+
+                              }, icon: Icon(
                               Icons.search,
+                            ),
                             ),
                           ),
                           filled: true,
                           fillColor: Colors.white,
-                          hintText: "    rice",
+                          hintText: "    search products",
                           hintStyle: TextStyle(
                             //fontFamily: 'Lexend Deca ',
                             //color: Color(0xFF95A1AC),
@@ -108,17 +132,18 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisSpacing: 8,
                childAspectRatio: (3/4),
             ),
+
             delegate: SliverChildBuilderDelegate((context, index) {
-              if(_productProvider.productModel?.data! == null){
-               // print("100 = + ${_productProvider.productModel?.data!.products!.results![0].id}");
-                return Center(child: CircularProgressIndicator(),);
+              //for pagination condition
+              if(_productProvider.result.length == index+1 && customOffset < countLeng! ){
+                customOffset = customOffset + 10;
+                _productProvider.getData('rice', customOffset);
               }
-              Result result = Result.fromJson(_productProvider.productModel?.data!.products!.results![index].toJson() as Map<String, dynamic>);
-              return  _productProvider.productModel!.data!.products!.results != null ?
-                ProductItemWidget(result, index) :
+              return  _productProvider.result.length != null ?
+             ProductItemWidget(_productProvider.result[index], index):
                 Center(child: CircularProgressIndicator(),);
               },
-              childCount: _productProvider.productModel?.data!.products!.results!.length,
+              childCount: _productProvider.result.length,
             ),
           ),
       ],

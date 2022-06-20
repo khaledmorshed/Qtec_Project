@@ -2,10 +2,12 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_neumorphic/flutter_neumorphic.dart';
 import 'package:flutter_polygon/flutter_polygon.dart';
+import 'package:provider/provider.dart';
 import 'package:qtech_project/global/constant_variable.dart';
 import 'package:qtech_project/model/product_model.dart';
 
 import '../global/color_management.dart';
+import '../provider/product_provider.dart';
 
 class ProductDetailsScreen extends StatefulWidget {
   static final String path = "/ProductDetailsScreen";
@@ -19,7 +21,12 @@ class ProductDetailsScreen extends StatefulWidget {
 }
 
 class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
+  late ProductProvider _productProvider;
+  final _formKey = GlobalKey<FormState>();
   final searchController = TextEditingController();
+  bool _isInit = true;
+  String holdSearchText = '';
+
   @override
   Widget build(BuildContext context) {
     final heighM = MediaQuery.of(context).size.height;
@@ -70,9 +77,10 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                     SizedBox(
                       height: 40,
                       width: widthM - 30,
-                      child: TextField(
+                      child: TextFormField(
+                        key: _formKey,
                         controller: searchController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           contentPadding:
                           EdgeInsets.only(top: 0, bottom: 0),
                           border: OutlineInputBorder(
@@ -84,8 +92,17 @@ class _ProductDetailsScreenState extends State<ProductDetailsScreen> {
                           suffixIcon: Align(
                             widthFactor: 0.5,
                             //heightFactor: 5.0,
-                            child: Icon(
+                            child: IconButton(
+                              onPressed: (){
+                                _formKey.currentState?.save();
+                                print("++${searchController.text}");
+                                if(searchController.text.trim() != ''){
+                                  //_productProvider.getData(searchController.text.trim());
+                                }
+                              },
+                              icon: Icon(
                               Icons.search,
+                            ),
                             ),
                           ),
                           filled: true,

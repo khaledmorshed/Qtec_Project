@@ -42,6 +42,7 @@ dependencies:
   carousel_slider:
   flutter_neumorphic:
   flutter_polygon:
+  infinite_scroll_pagination:
 
 dev_dependencies:
   flutter_test:

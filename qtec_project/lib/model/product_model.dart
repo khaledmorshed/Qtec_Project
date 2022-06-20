@@ -290,6 +290,7 @@ class Charge {
   bool? campaignSection;
   dynamic? message;
 
+  //decoding of json
   factory Charge.fromJson(Map<String, dynamic> json) => Charge(
     bookingPrice: json["booking_price"],
     currentCharge: json["current_charge"],
